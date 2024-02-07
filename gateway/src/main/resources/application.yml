@@ -1,0 +1,54 @@
+eureka:
+    client:
+        service-url:
+            default-zone: ${EUREKA_URL:http://localhost:8761/eureka}
+    instance:
+        prefer-ip-address: true
+server:
+    port: 5000
+
+spring:
+    application:
+        name: gamestore-gateway
+    servlet:
+        multipart:
+            max-file-size: 2GB
+            max-request-size: 2GB
+    cloud:
+        gateway:
+            discovery:
+                locator:
+                    enabled: true
+                    lower-case-service-id: true
+            routes:
+            - id: backend.game.route
+              uri: ${BACKEND_URL:http://localhost:8080}
+              predicates:
+              - Path=/game/**
+              - Method=GET
+            - id: backend.upload.route
+              uri: ${BACKEND_URL:http://localhost:8080}
+              predicates:
+              - Path=/upload/**
+              - Method=POST
+            - id: backend.download.route
+              uri: ${BACKEND_URL:http://localhost:8080}
+              predicates:
+              - Path=/download/**
+              - Method=GET
+            - id: backend.purchase.route
+              uri: ${BACKEND_URL:http://localhost:8080}
+              predicates:
+              - Path=/purchase/**
+              - Method=POST
+            - id: backend.register.route
+              uri: ${BACKEND_URL:http://localhost:8080}
+              predicates:
+              - Path=/register
+              - Method=POST
+            - id: backend.login.route
+              uri: ${BACKEND_URL:http://localhost:8080}
+              predicates:
+              - Path=/login
+              - Method=GET
+          

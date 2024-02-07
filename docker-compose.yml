@@ -1,0 +1,57 @@
+version: '3'
+
+volumes:
+    mongo-volume:
+        driver: local
+
+networks:
+    springnet:
+        name: springnet
+        driver: bridge
+
+services:
+    mongo:
+        container_name: mongo
+        image: mongo
+        restart: always
+        ports:
+        - 27017:27017
+        volumes:
+        - mongo-volume:/etc/mongo
+        networks:
+        - springnet
+    eureka:
+        container_name: eureka
+        image: eureka
+        restart: always
+        ports:
+        - 8761:8761
+        networks:
+        - springnet
+    gateway:
+        container_name: gateway
+        image: gateway
+        restart: always
+        ports:
+        - 5000:5000
+        networks:
+        - springnet
+        depends_on:
+        - eureka
+        environment:
+            EUREKA_URL: "http://eureka:8761/eureka"
+	    BACKEND_URL: "http://backend:8080"
+    backend:
+        container_name: backend
+        image: backend
+        restart: always
+        ports:
+        - 8080:8080
+        networks:
+        - springnet
+        depends_on:
+        - eureka
+        - mongo
+        environment:
+            EUREKA_URL: "http://eureka:8761/eureka"
+            MONGO_URL: mongo

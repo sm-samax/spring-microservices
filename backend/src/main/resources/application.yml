@@ -1,0 +1,22 @@
+eureka:
+    instance:
+        prefer-ip-address: true
+    client:
+        service-url: 
+            default-zone: ${EUREKA_URL:http://eureka:8761/eureka}
+    
+server:
+    port: 8080
+spring:
+    application:
+        name: gamestore-backend
+    data:
+        mongodb:
+            database: gamestore
+            host: ${MONGO_URL:localhost}
+            port: 27017
+    servlet:
+        multipart:
+            max-file-size: 2GB
+            max-request-size: 2GB
+              
